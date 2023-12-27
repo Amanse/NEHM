@@ -1,8 +1,15 @@
 # NEHS STACK
 
-Basic app using Node, Express, Htmx and sqlite. Currently has authentication and JWT but that's it. Super simple
+Basic app using Node, Express, Htmx and sqlite. Super simple
 
 ## To run
+
+### Setup sqlite
+
+```bash
+sqlite3 database.db < 00-init-user.sql
+sqlite3 database.db < 10-init-session.sql
+```
 
 ### Nix/Nixos
 
