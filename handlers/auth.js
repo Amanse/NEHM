@@ -39,12 +39,48 @@ export const login = async (req, res) => {
     return;
   }
 
-  bcrypt.compare(req.body.password, re.password, function (err, result) {
-    if (result) {
-      var token = jwt.sign({ email: req.body.email }, process.env.SECRET_TOKEN);
-      res.cookie("auth", token).set("hx-location", "/").send("success");
-    } else {
-      res.status(400).send("INvalid password");
-    }
-  });
+  try {
+    bcrypt.compare(req.body.password, re.password, function (err, result) {
+      if (result) {
+        var token = jwt.sign(
+          { email: req.body.email },
+          process.env.SECRET_TOKEN,
+        );
+        d.run(`INSERT INTO user_session (token) VALUES (?)`, token);
+        res.cookie("auth", token).set("hx-location", "/").send("success");
+      } else {
+        res.status(400).send("INvalid password");
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const logout = async (req, res) => {
+  await removeSession(req.cookies.auth);
+
+  res.clearCookie("auth");
+  res.set("hx-location", "/login").status(200).send();
+};
+
+export const removeSession = async (token) => {
+  const d = await db;
+
+  d.run("delete from user_session where token=?", token);
+};
+
+export const validateUser = async (token) => {
+  const d = await db;
+
+  const res = await d.get(
+    "select token from user_session where token=?",
+    token,
+  );
+
+  if (res === undefined) {
+    return false;
+  } else {
+    return true;
+  }
 };

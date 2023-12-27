@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login } from "./handlers/auth.js";
+import { signup, login, logout, validateUser } from "./handlers/auth.js";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -24,10 +24,12 @@ app.use((req, res, next) => {
   next();
 });
 
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated) {
+const isAuthenticated = async (req, res, next) => {
+  const isV = await validateUser(req.cookies.auth);
+  if (req.isAuthenticated && isV) {
     next();
   } else {
+    res.clearCookie("auth");
     res.status(401).redirect("/login");
   }
 };
@@ -39,10 +41,7 @@ app.get("/", isAuthenticated, (req, res) => {
 
 app.get("/signup", (req, res) => res.render("auth/signup"));
 app.get("/login", (req, res) => res.render("auth/login"));
-app.get("/logout", (req, res) => {
-  res.clearCookie("auth");
-  res.set("hx-location", "/login").status(200).send();
-});
+app.get("/logout", logout);
 
 app.post("/signup", signup);
 app.post("/login", login);
