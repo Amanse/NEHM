@@ -1,6 +1,8 @@
 import express from "express";
 import { signup, login } from "./handlers/auth.js";
 import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const app = express();
 
@@ -9,6 +11,8 @@ app.use(express.static("public"));
 app.use(cookieParser());
 // app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+dotenv.config();
 
 app.use((req, res, next) => {
   const { auth } = req.cookies;
@@ -29,7 +33,8 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get("/", isAuthenticated, (req, res) => {
-  res.render("index");
+  var dc = jwt.verify(req.cookies.auth, process.env.SECRET_TOKEN);
+  res.render("index", { email: dc.email });
 });
 
 app.get("/signup", (req, res) => res.render("auth/signup"));

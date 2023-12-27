@@ -8,7 +8,7 @@
     '';
   in {
     devShells.${system}.default = pkgs.mkShell {
-      packages = [run];
+      packages = with pkgs; [run sqlite];
     };
   };
 }
