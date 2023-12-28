@@ -11,6 +11,7 @@ export const signup = (req, res) => {
 
     if (result) {
       res.status(400).send("useer exists");
+
       return;
     }
 
@@ -31,7 +32,7 @@ export const login = async (req, res) => {
   const d = await db;
 
   const re = await d.get(
-    `SELECT password from users where email='${req.body.email}' limit 1`,
+    `SELECT id,password from users where email='${req.body.email}' limit 1`,
   );
 
   if (!re) {
@@ -43,10 +44,11 @@ export const login = async (req, res) => {
     bcrypt.compare(req.body.password, re.password, function (err, result) {
       if (result) {
         var token = jwt.sign(
-          { email: req.body.email },
+          { email: req.body.email, id: re.id },
           process.env.SECRET_TOKEN,
         );
         d.run(`INSERT INTO user_session (token) VALUES (?)`, token);
+
         res.cookie("auth", token).set("hx-location", "/").send("success");
       } else {
         res.status(400).send("INvalid password");
@@ -61,7 +63,7 @@ export const logout = async (req, res) => {
   await removeSession(req.cookies.auth);
 
   res.clearCookie("auth");
-  res.set("hx-location", "/login").status(200).send();
+  res.redirect("/login");
 };
 
 export const removeSession = async (token) => {
@@ -83,4 +85,9 @@ export const validateUser = async (token) => {
   } else {
     return true;
   }
+};
+
+export const getUserInfoFromToken = (token) => {
+  var dc = jwt.verify(token, process.env.SECRET_TOKEN);
+  return dc;
 };

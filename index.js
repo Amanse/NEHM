@@ -35,13 +35,16 @@ const isAuthenticated = async (req, res, next) => {
 };
 
 app.get("/", isAuthenticated, (req, res) => {
-  var dc = jwt.verify(req.cookies.auth, process.env.SECRET_TOKEN);
-  res.render("index", { email: dc.email });
+  // var dc = jwt.verify(req.cookies.auth, process.env.SECRET_TOKEN);
+  var { email } = getUserInfoFromToken(req.cookies.auth);
+
+  res.render("index", { email });
 });
 
 app.get("/signup", (req, res) => res.render("auth/signup"));
 app.get("/login", (req, res) => res.render("auth/login"));
 app.get("/logout", logout);
+app.get("/notes", getAllNotes);
 
 app.post("/signup", signup);
 app.post("/login", login);
