@@ -1,8 +1,15 @@
 import express from "express";
-import { signup, login, logout, validateUser } from "./handlers/auth.js";
+import {
+  signup,
+  login,
+  logout,
+  validateUser,
+  getUserInfoFromToken,
+} from "./handlers/auth.js";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { getAllNotes } from "./handlers/notes.js";
 
 const app = express();
 

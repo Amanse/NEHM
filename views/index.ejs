@@ -3,18 +3,17 @@
     <title>HTMX test</title>
     <link href="/output.css" rel="stylesheet">
   </head>
-  <body class="bg-gray-900">
-      <div class="flex h-screen">
+  <body class="bg-gray-900 text-white">
+      <div class="flex h-5/6" hx-trigger="load" hx-get="/notes" hx-target="#allNotes">
           <div class="m-auto">
           <div class="text-white">
               Welome! <%= email %>
               <span id="input-id"></span>
           </div>
-          <button class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" 
-              hx-get="/logout" 
-              hx-trigger="click"
+          <a class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" 
+              href="/logout"
               >Logout
-          </button>
+          </a>
               <button
                   class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                   hx-get="/check"
@@ -25,6 +24,10 @@
                   Click here to check
               </button>
       </div>
+ </div>
+ <div class="flex justify-center items-center flex-col">
+<p class="text-6xl width-auto">Your Notes</p>
+<div id="allNotes"></div>
  </div>
     <script
       src="/htmx.js"
