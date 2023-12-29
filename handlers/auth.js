@@ -2,29 +2,29 @@ import db from "../lib/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-export const signup = (req, res) => {
-  db.then(async (d) => {
-    const result = await d.get(
-      "SELECT email FROM users WHERE email = ?",
+export const signup = async (req, res) => {
+  const d = await db;
+
+  const result = await d.get(
+    "SELECT email FROM users WHERE email = ?",
+    req.body.email,
+  );
+
+  if (result) {
+    res.status(400).send("useer exists");
+
+    return;
+  }
+
+  bcrypt.hash(req.body.password, 10, function (err, hash) {
+    // Store hash in your password DB.
+    d.run(
+      `INSERT INTO users (email, password) VALUES (?, ?);`,
       req.body.email,
+      hash,
     );
 
-    if (result) {
-      res.status(400).send("useer exists");
-
-      return;
-    }
-
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
-      // Store hash in your password DB.
-      d.run(
-        `INSERT INTO users (email, password) VALUES (?, ?);`,
-        req.body.email,
-        hash,
-      );
-
-      res.set("hx-location", "/").send("succky");
-    });
+    res.set("hx-location", "/").send("succky");
   });
 };
 
