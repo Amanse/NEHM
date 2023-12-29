@@ -9,7 +9,7 @@ import {
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { getAllNotes } from "./handlers/notes.js";
+import { addNote, getAllNotes } from "./handlers/notes.js";
 
 const app = express();
 
@@ -55,6 +55,7 @@ app.get("/notes", getAllNotes);
 
 app.post("/signup", signup);
 app.post("/login", login);
+app.post("/notes/add", addNote);
 
 app.get("/check", (req, res) => {
   res.render("button");
