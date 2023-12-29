@@ -1,4 +1,6 @@
 import db from "../lib/db.js";
+import showdown from "showdown";
+import sanitizeHtml from "sanitize-html";
 import { getUserInfoFromToken } from "./auth.js";
 
 export const getAllNotes = async (req, res) => {
@@ -20,8 +22,12 @@ export const addNote = async (req, res) => {
   const { body } = req.body;
 
   const { id } = getUserInfoFromToken(req.cookies.auth);
+  var convertor = new showdown.Converter();
 
-  await d.run("Insert into notes (uid, body) values (?,?)", id, body);
+  var tb = convertor.makeHtml(body);
 
-  res.render("notes/note", { body });
+  const clean = sanitizeHtml(tb);
+  await d.run("Insert into notes (uid, body) values (?,?)", id, clean);
+
+  res.render("notes/note", { body: clean });
 };

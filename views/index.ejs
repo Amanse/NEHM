@@ -1,24 +1,30 @@
 <html>
   <head>
-    <title>HTMX test</title>
-    <link href="/output.css" rel="stylesheet">
+      <title>HTMX test</title>
+      <script src="/htmx.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+      <link href="/output.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white">
-      <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-          <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-              <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                  <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Welcome, <%= email %>!</span>
-              </a>
-          </div>
-      </nav>
+      <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Welcome, <%= email%></span>
+        </a>
+        <div class="flex items-center space-x-6 rtl:space-x-reverse">
+            <a href="/logout" class="text-sm text-red-600 dark:text-red-500 hover:underline">Logout</a>
+        </div>
+    </div>
+</nav>
       <div class="flex">
 
           <div class="w-1/6" hx-trigger="load" hx-get="/notes" hx-target="#allNotes">
           </div>
 
-          <div class="flex w-4/6  flex-col">
+          <div class="flex w-4/6  flex-col text-white">
               <form hx-post="/notes/add" hx-target="#allNotes" hx-swap="afterbegin"> 
-                  <textarea name="body" class="text-black">Something on your mind...?</textarea>
+                  <textarea name="body" id="note-body" class="text-black"></textarea>
                   <button >Add</button>
               </form>
               <div id="allNotes"></div>
@@ -26,9 +32,8 @@
 
       </div>
 
-    <script
-      src="/htmx.js"
-    ></script>
-<script src="https://unpkg.com/htmx.org/dist/ext/debug.js"></script>
+      <script>
+          var simplemde = new SimpleMDE({hideIcons: true, palceholder: "Something on your mind..."});
+      </script>
   </body>
 </html>
