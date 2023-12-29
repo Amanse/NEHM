@@ -20,7 +20,7 @@ export const signup = async (req, res) => {
     bcrypt.hash(req.body.password, 10, function (err, hash) {
       // Store hash in your password DB.
       try {
-        if (err) throw new Error(err);
+        if (err) throw err;
         d.run(
           `INSERT INTO users (email, password) VALUES (?, ?);`,
           req.body.email,
@@ -38,33 +38,40 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const d = await db;
-
-  const re = await d.get(
-    `SELECT id,password from users where email='${req.body.email}' limit 1`,
-  );
-
-  if (!re) {
-    res.status(400).send("user no exist");
-    return;
-  }
-
   try {
-    bcrypt.compare(req.body.password, re.password, function (err, result) {
-      if (result) {
-        var token = jwt.sign(
-          { email: req.body.email, id: re.id },
-          process.env.SECRET_TOKEN,
-        );
-        d.run(`INSERT INTO user_session (token) VALUES (?)`, token);
+    const d = await db;
 
-        res.cookie("auth", token).set("hx-location", "/").send("success");
-      } else {
-        res.status(400).send("INvalid password");
+    const re = await d.get(
+      `SELECT id,password from users where email='${req.body.email}' limit 1`,
+    );
+
+    if (!re) {
+      res.status(400).send("user no exist");
+      return;
+    }
+
+    bcrypt.compare(req.body.password, re.password, function (err, result) {
+      try {
+        if (err) throw err;
+        if (result) {
+          var token = jwt.sign(
+            { email: req.body.email, id: re.id },
+            process.env.SECRET_TOKEN,
+          );
+          d.run(`INSERT INTO user_session (token) VALUES (?)`, token);
+
+          res.cookie("auth", token).set("hx-location", "/").send("success");
+        } else {
+          res.status(400).send("INvalid password");
+        }
+      } catch (e) {
+        res
+          .status(500)
+          .send("Couldn't login right now, please try again later");
       }
     });
   } catch (e) {
-    console.log(e);
+    res.status(500).send("Couldn't login right now, please try again later");
   }
 };
 
