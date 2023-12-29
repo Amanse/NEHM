@@ -21,6 +21,6 @@ run
 ### others
 
 ```bash
-npx tailwindcss -i input.css -o public/style.css
+npx tailwindcss -i input.css -o public/output.css
 npm run dev
 ```
