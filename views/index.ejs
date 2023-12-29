@@ -4,32 +4,28 @@
     <link href="/output.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white">
-      <div class="flex h-5/6" hx-trigger="load" hx-get="/notes" hx-target="#allNotes">
-          <div class="m-auto">
-          <div class="text-white">
-              Welome! <%= email %>
-              <span id="input-id"></span>
+      <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+          <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+              <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                  <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Welcome, <%= email %>!</span>
+              </a>
           </div>
-          <a class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" 
-              href="/logout"
-              >Logout
-          </a>
-              <button
-                  hx-ext="debug"
-                  class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                  hx-get="/check"
-                  hx-trigger="click"
-                  hx-target="#input-id"
-                  hx-swap="outerHTML"
-                  >
-                  Click here to check
-              </button>
+      </nav>
+      <div class="flex">
+
+          <div class="w-1/6" hx-trigger="load" hx-get="/notes" hx-target="#allNotes">
+          </div>
+
+          <div class="flex w-4/6  flex-col">
+              <form hx-post="/notes/add" hx-target="#allNotes" hx-swap="afterbegin"> 
+                  <textarea name="body" class="text-black">Something on your mind...?</textarea>
+                  <button >Add</button>
+              </form>
+              <div id="allNotes"></div>
+          </div>
+
       </div>
- </div>
- <div class="flex justify-center items-center flex-col">
-<p class="text-6xl width-auto">Your Notes</p>
-<div id="allNotes"></div>
- </div>
+
     <script
       src="/htmx.js"
     ></script>
