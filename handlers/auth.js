@@ -3,29 +3,38 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 export const signup = async (req, res) => {
-  const d = await db;
+  try {
+    const d = await db;
 
-  const result = await d.get(
-    "SELECT email FROM users WHERE email = ?",
-    req.body.email,
-  );
-
-  if (result) {
-    res.status(400).send("useer exists");
-
-    return;
-  }
-
-  bcrypt.hash(req.body.password, 10, function (err, hash) {
-    // Store hash in your password DB.
-    d.run(
-      `INSERT INTO users (email, password) VALUES (?, ?);`,
+    const result = await d.get(
+      "SELECT email FROM users WHERE email = ?",
       req.body.email,
-      hash,
     );
 
-    res.set("hx-location", "/").send("succky");
-  });
+    if (result) {
+      res.status(400).send("user exists");
+
+      return;
+    }
+
+    bcrypt.hash(req.body.password, 10, function (err, hash) {
+      // Store hash in your password DB.
+      try {
+        if (err) throw new Error(err);
+        d.run(
+          `INSERT INTO users (email, password) VALUES (?, ?);`,
+          req.body.email,
+          hash,
+        );
+
+        res.set("hx-location", "/").send("succky");
+      } catch (e) {
+        res.status(500).send("Couldn't create user");
+      }
+    });
+  } catch (e) {
+    res.status(500).send("Couldn't create user");
+  }
 };
 
 export const login = async (req, res) => {
