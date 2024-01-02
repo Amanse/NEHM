@@ -7,8 +7,7 @@ Basic app using Node, Express, Htmx and sqlite. Super simple
 ### Setup sqlite
 
 ```bash
-sqlite3 database.db < 00-init-user.sql
-sqlite3 database.db < 10-init-session.sql
+sqlite3 database.db < migrations/*init*
 ```
 
 ### Nix/Nixos

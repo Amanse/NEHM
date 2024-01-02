@@ -23,9 +23,9 @@
           </div>
 
           <div class="flex w-4/6  flex-col text-white">
-              <form hx-post="/notes/add" hx-target="#allNotes" hx-swap="afterbegin"> 
+              <form id="mainForm" hx-post="/notes/add" hx-target="#allNotes" hx-swap="afterbegin"> 
                   <textarea name="body" id="note-body" class="text-black"></textarea>
-                  <button >Add</button>
+                  <button id="addButton" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Add</button>
               </form>
               <div id="allNotes"></div>
           </div>
@@ -33,7 +33,12 @@
       </div>
 
       <script>
-          var simplemde = new SimpleMDE({hideIcons: true, palceholder: "Something on your mind..."});
+          var simplemde = new SimpleMDE({toolbar: false, placeholder: "Press shift+enter to submit..."});
+
+          simplemde.codemirror.addKeyMap({'Shift-Enter': function(cm) {
+              document.querySelector("#addButton").click();
+              simplemde.value("")
+          }})
       </script>
   </body>
 </html>
