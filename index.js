@@ -34,6 +34,9 @@ app.use((req, res, next) => {
 const isAuthenticated = async (req, res, next) => {
   const isV = await validateUser(req.cookies.auth);
   if (req.isAuthenticated && isV) {
+    if (req.path == "/login" || req.path == "/signup") {
+      res.redirect("/");
+    }
     next();
   } else {
     res.clearCookie("auth");
@@ -48,10 +51,10 @@ app.get("/", isAuthenticated, (req, res) => {
   res.render("index", { email });
 });
 
-app.get("/signup", (req, res) => res.render("auth/signup"));
-app.get("/login", (req, res) => res.render("auth/login"));
+app.get("/signup", isAuthenticated, (req, res) => res.render("auth/signup"));
+app.get("/login", isAuthenticated, (req, res) => res.render("auth/login"));
 app.get("/logout", logout);
-app.get("/notes", getAllNotes);
+app.get("/notes", isAuthenticated, getAllNotes);
 
 app.post("/signup", signup);
 app.post("/login", login);
