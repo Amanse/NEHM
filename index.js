@@ -44,15 +44,25 @@ const isAuthenticated = async (req, res, next) => {
   }
 };
 
+const alreadyAuth = async (req, res, next) => {
+  const isV = await validateUser(req.cookies.auth);
+  if (req.isAuthenticated && isV) {
+    if (req.path == "/login" || req.path == "/signup") {
+      res.redirect("/");
+    }
+    next();
+  }
+  next();
+};
+
 app.get("/", isAuthenticated, (req, res) => {
-  // var dc = jwt.verify(req.cookies.auth, process.env.SECRET_TOKEN);
   var { email } = getUserInfoFromToken(req.cookies.auth);
 
   res.render("index", { email });
 });
 
-app.get("/signup", isAuthenticated, (req, res) => res.render("auth/signup"));
-app.get("/login", isAuthenticated, (req, res) => res.render("auth/login"));
+app.get("/signup", alreadyAuth, (req, res) => res.render("auth/signup"));
+app.get("/login", alreadyAuth, (req, res) => res.render("auth/login"));
 app.get("/logout", logout);
 app.get("/notes", isAuthenticated, getAllNotes);
 
