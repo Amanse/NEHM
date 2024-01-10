@@ -1,3 +1,3 @@
 <% notes.forEach((note) => { %>
-<%- include('./note.ejs', {id: note.id, body: note.body}) %>
+<%- include('./note.ejs', {id: note._id, body: note.body}) %>
 <% }); %>
