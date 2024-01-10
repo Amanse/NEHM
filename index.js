@@ -7,7 +7,7 @@ import {
   getUserInfoFromToken,
 } from "./handlers/auth.js";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { addNote, deleteNote, getAllNotes } from "./handlers/notes.js";
 
@@ -20,6 +20,18 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 dotenv.config();
+
+async function db() {
+  await mongoose.connect(process.env.MONGOOSE_URI);
+}
+
+db()
+  .then((res) => {
+    console.log("DB connected");
+  })
+  .catch((err) => {
+    console.log(`error ${err}`);
+  });
 
 app.use((req, res, next) => {
   const { auth } = req.cookies;

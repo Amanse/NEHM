@@ -1,31 +1,32 @@
-import db from "../lib/db.js";
+import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import UserSession from "../models/user_session.js";
 
 export const signup = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const d = await db;
+    if (!email || !password) {
+      throw new Error("Enter email/password");
+    }
 
-    const result = await d.get(
-      "SELECT email FROM users WHERE email = ?",
-      req.body.email,
-    );
-
-    if (result) {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      // res.status(400).render("register", { error: "Username already exists" });
       res.status(400).send("user exists");
-
       return;
     }
 
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
+    bcrypt.hash(req.body.password, 10, async function (err, hash) {
       // Store hash in your password DB.
       try {
         if (err) throw err;
-        d.run(
-          `INSERT INTO users (email, password) VALUES (?, ?);`,
-          req.body.email,
-          hash,
-        );
+        const newUser = User({
+          email,
+          password: hash,
+        });
+
+        await newUser.save();
 
         res.set("hx-location", "/").send("succky");
       } catch (e) {
@@ -38,27 +39,28 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const d = await db;
-
-    const re = await d.get(
-      `SELECT id,password from users where email='${req.body.email}' limit 1`,
-    );
-
-    if (!re) {
+    const user = await User.findOne({ email });
+    if (!user) {
       res.status(400).send("user no exist");
       return;
     }
 
-    bcrypt.compare(req.body.password, re.password, function (err, result) {
+    bcrypt.compare(password, user.password, function (err, result) {
+      console.log(user.password);
       try {
         if (err) throw err;
         if (result) {
           var token = jwt.sign(
-            { email: req.body.email, id: re.id },
+            { email, id: user.id },
             process.env.SECRET_TOKEN,
           );
-          d.run(`INSERT INTO user_session (token) VALUES (?)`, token);
+          const newSession = UserSession({
+            token,
+          });
+          newSession.save();
 
           res.cookie("auth", token).set("hx-location", "/").send("success");
         } else {
@@ -83,18 +85,11 @@ export const logout = async (req, res) => {
 };
 
 export const removeSession = async (token) => {
-  const d = await db;
-
-  d.run("delete from user_session where token=?", token);
+  await UserSession.deleteOne({ token });
 };
 
 export const validateUser = async (token) => {
-  const d = await db;
-
-  const res = await d.get(
-    "select token from user_session where token=?",
-    token,
-  );
+  const res = UserSession.find({ token });
 
   if (res === undefined) {
     return false;
