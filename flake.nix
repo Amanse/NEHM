@@ -8,7 +8,7 @@
     '';
   in {
     devShells.${system}.default = pkgs.mkShell {
-      packages = with pkgs; [run sqlite mongosh];
+      packages = with pkgs; [run mongosh];
     };
   };
 }
