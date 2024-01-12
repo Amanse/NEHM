@@ -1,16 +1,16 @@
-# NEHS STACK
+# NEHM STACK
 
-Basic app using Node, Express, Htmx and sqlite. Super simple
+Basic app using Node, Express, Htmx and Mongodb. Super simple
+
+## Setup
+1. Have Nodejs installed and a Mongodb server running
+2. Cope .env.example to .env and fill the required values(secret for jwt tokens and mongodb uri)
+3. `npm i`
 
 ## To run
 
-### Setup sqlite
-
-```bash
-sqlite3 database.db < migrations/*init*
-```
-
 ### Nix/Nixos
+(It will automatically watch changes in files and update both tailwind ouput and restart server)
 
 ```bash
 nix develop
