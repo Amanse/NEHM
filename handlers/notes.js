@@ -35,7 +35,6 @@ export const cleanFormHtml = (req, res) => {
 };
 
 export const addNote = async (req, res) => {
-  console.log(req.body);
   const { body } = req.body;
 
   const { id } = getUserInfoFromToken(req.cookies.auth);

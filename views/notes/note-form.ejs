@@ -7,7 +7,7 @@
     <% } %> 
     _="on submit set #note-body.value to ''" 
     > 
-    <textarea name="body" id="note-body" rows="4" class="text-black w-full py-2 mb-2" placeholder="# You can use markdown here"><% if (body) { %><%= body %><% } %></textarea>
+    <textarea name="body" id="note-body" rows="4" class="resize-y text-black w-full py-2 mb-2" placeholder="# You can use markdown here"><% if (body) { %><%= body %><% } %></textarea>
     <button 
         <% if (id) { %>
         id="editButton" 

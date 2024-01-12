@@ -49,7 +49,6 @@ export const login = async (req, res) => {
     }
 
     bcrypt.compare(password, user.password, function (err, result) {
-      console.log(user.password);
       try {
         if (err) throw err;
         if (result) {
