@@ -4,6 +4,10 @@
       <script src="/htmx.js"></script>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+
       <link href="/output.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white">
@@ -22,23 +26,27 @@
           <div class="w-1/6" hx-trigger="load" hx-get="/notes" hx-target="#allNotes">
           </div>
 
-          <div class="flex w-4/6  flex-col text-white">
-              <form id="mainForm" hx-post="/notes/add" hx-target="#allNotes" hx-swap="afterbegin"> 
-                  <textarea name="body" id="note-body" class="text-black"></textarea>
-                  <button id="addButton" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">Add</button>
-              </form>
+          <div class="flex w-4/6  flex-col text-white" >
+              <span id="formParent" hx-trigger="clean from:body" hx-swap="innerHTML" hx-get="/notes/clean-form"><%- include("./notes/note-form.ejs", {id: undefined, body: undefined}) %></span>
               <div id="allNotes"></div>
           </div>
 
       </div>
 
       <script>
-          var simplemde = new SimpleMDE({toolbar: false, placeholder: "Press shift+enter to submit..."});
+          //document.querySelector("#mainForm").addEventListener()
+          function changeTextArea(value) {
+              var simplemde = new EasyMDE({element: document.querySelector("#note-body") ,toolbar: false, placeholder: "Press shift+enter to submit..."});
 
-          simplemde.codemirror.addKeyMap({'Shift-Enter': function(cm) {
-              document.querySelector("#addButton").click();
-              simplemde.value("")
-          }})
+              if(value) {
+                  simplemde.value(value)
+              }
+
+              simplemde.codemirror.addKeyMap({'Shift-Enter': function(cm) {
+                  document.querySelector("#addButton").click();
+                  simplemde.value("")
+              }})
+          }
       </script>
   </body>
 </html>

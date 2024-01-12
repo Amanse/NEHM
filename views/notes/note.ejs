@@ -1,8 +1,12 @@
+<!-- Takes id: String, body: String -->
 <div class="mb-4" id="note-<%= id %>">
 <div class="w-auto p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-    <article class="prose  dark:prose-invert"><%- body %></article>
+    <article class="prose dark:prose-invert"><%- body %></article>
     <button hx-swap="delete" hx-confirm="Are you sure you want to delete this note?" hx-target="#note-<%= id %>" hx-post="/notes/delete/<%= id %>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
         Delete 
+    </button>
+    <button  hx-target="#mainForm" hx-swap="outerHTML" hx-get="/notes/edit/<%= id %>" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+        Edit 
     </button>
 </div>
 

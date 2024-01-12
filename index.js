@@ -9,7 +9,14 @@ import {
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { addNote, deleteNote, getAllNotes } from "./handlers/notes.js";
+import {
+  addNote,
+  cleanFormHtml,
+  deleteNote,
+  editNote,
+  editNoteHtml,
+  getAllNotes,
+} from "./handlers/notes.js";
 
 const app = express();
 
@@ -77,15 +84,15 @@ app.get("/signup", alreadyAuth, (req, res) => res.render("auth/signup"));
 app.get("/login", alreadyAuth, (req, res) => res.render("auth/login"));
 app.get("/logout", logout);
 app.get("/notes", isAuthenticated, getAllNotes);
+app.get("/notes/edit/:id", editNoteHtml);
+app.get("/notes/clean-form", cleanFormHtml);
 
 app.post("/signup", signup);
 app.post("/login", login);
 app.post("/notes/add", addNote);
 app.post("/notes/delete/:id", deleteNote);
 
-app.get("/check", (req, res) => {
-  res.render("button");
-});
+app.put("/notes/edit/:id", editNote);
 
 app.listen("8080", () => {
   console.log("listening on 8080");
