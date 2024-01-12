@@ -1,12 +1,4 @@
-<html>
-<head>
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-
-<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-<script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
-<link href="/output.css" rel="stylesheet">
-</head>
-<body class="bg-gray-900 text-white">
+<%- include("../partials/header") %>
     <div class="flex h-screen"  hx-ext="response-targets">
     <form hx-post="/signup" class="m-auto w-6/12" hx-target-4*="#FormResult" hx-swap="innerHTML" hx-target-5*="#FormResult" >
                 <div class="mb-6">
@@ -23,5 +15,4 @@
     <p class="text-red-400" id="FormResult"></p>
     </form>
     </div>
-</body>
-</html>
+<%- include("../partials/footer.ejs")%>
