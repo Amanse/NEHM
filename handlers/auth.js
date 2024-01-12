@@ -88,9 +88,9 @@ export const removeSession = async (token) => {
 };
 
 export const validateUser = async (token) => {
-  const res = UserSession.find({ token });
+  const res = await UserSession.findOne({ token });
 
-  if (res === undefined) {
+  if (!res) {
     return false;
   } else {
     return true;
