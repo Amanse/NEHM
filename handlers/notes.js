@@ -82,7 +82,7 @@ export const editNoteHtml = async (req, res) => {
 
   const body = htmlToMd(re.body);
 
-  res.render("notes/note-form", { id, body });
+  res.set("HX-trigger", "showUrself").render("notes/note-form", { id, body });
 };
 
 export const editNote = async (req, res) => {

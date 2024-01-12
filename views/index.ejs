@@ -2,12 +2,7 @@
   <head>
       <title>HTMX test</title>
       <script src="/htmx.js"></script>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-
       <link href="/output.css" rel="stylesheet">
   </head>
   <body class="bg-gray-900 text-white">
@@ -32,21 +27,5 @@
           </div>
 
       </div>
-
-      <script>
-          //document.querySelector("#mainForm").addEventListener()
-          function changeTextArea(value) {
-              var simplemde = new EasyMDE({element: document.querySelector("#note-body") ,toolbar: false, placeholder: "Press shift+enter to submit..."});
-
-              if(value) {
-                  simplemde.value(value)
-              }
-
-              simplemde.codemirror.addKeyMap({'Shift-Enter': function(cm) {
-                  document.querySelector("#addButton").click();
-                  simplemde.value("")
-              }})
-          }
-      </script>
   </body>
 </html>

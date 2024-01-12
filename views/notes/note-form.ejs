@@ -7,14 +7,14 @@
     <% } %> 
     _="on submit set #note-body.value to ''" 
     > 
-    <textarea name="body" id="note-body" rows="4" class="text-black w-full py-2 mb-2"><% if (body) { %><%= body %><% } %></textarea>
+    <textarea name="body" id="note-body" rows="4" class="text-black w-full py-2 mb-2" placeholder="# You can use markdown here"><% if (body) { %><%= body %><% } %></textarea>
     <button 
         <% if (id) { %>
         id="editButton" 
+        _="on click go to top of #note-<%= id %> smoothly"
         <% } else { %>
         id="addButton" 
         <% } %>
-        _="on click go to top of #formParent"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <% if (id) { %>Edit<% } else { %> Add <% } %>
     </button>
